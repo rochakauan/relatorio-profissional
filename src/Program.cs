@@ -10,15 +10,21 @@ class Program
     {
         EnviarOpcoesDoMenu();
     }
+
     public static void EnviarOpcoesDoMenu()
     {
         ConsoleUtils.Message("Bem vindo ao Relatorio Profissional", ConsoleColor.DarkCyan, true);
-        ConsoleUtils.Message("Selecione o que deseja executar:\n| 1 - Ler relatorio\n| 2 - Adicionar servico\n| 3 - Remover um serviço\n| 0 - Sair", ConsoleColor.Cyan);
-     
-        if(TerminalConfig.ModoDesenvolvedorAtivo)
+        ConsoleUtils.Message(
+            "Selecione o que deseja executar:\n| 1 - Ler relatorio\n| 2 - Adicionar servico\n| 3 - Remover um serviço\n| 0 - Sair",
+            ConsoleColor.Cyan);
+
+        if (TerminalConfig.ModoDesenvolvedorAtivo)
+        {
             ConsoleUtils.Message("| 9 - Exibir logs | 10 - Limpar logs", ConsoleColor.DarkMagenta);
-        
-        var option = ConsoleUtils.Ask("Digite sua resposta", ConsoleColor.DarkCyan);
+            ConsoleUtils.Message("| 11 - Exibir auditoria | 12 - Limpar auditoria", ConsoleColor.DarkMagenta);
+        }
+
+    var option = ConsoleUtils.Ask("Digite sua resposta", ConsoleColor.DarkCyan);
         ManipularMenu(option);
     }
 
@@ -45,12 +51,22 @@ class Program
                 break;
             case "9":
                 if(TerminalConfig.ModoDesenvolvedorAtivo) Logger.ExibirLogs();
-                else ConsoleUtils.Message("Opçao invalida!",  ConsoleColor.Red, true);
+                else ConsoleUtils.Message("Opçao invalida!", ConsoleColor.Red, true);
                 ConsoleUtils.Pause();
                 EnviarOpcoesDoMenu();
                 break;
             case "10": if(TerminalConfig.ModoDesenvolvedorAtivo) Logger.LimparLogs();
-                else ConsoleUtils.Message("Opçao invalida!",   ConsoleColor.Red, true);
+                else ConsoleUtils.Message("Opçao invalida!", ConsoleColor.Red, true);
+                ConsoleUtils.Pause();
+                EnviarOpcoesDoMenu();
+                break;
+            case "11": if(TerminalConfig.ModoDesenvolvedorAtivo) AuditLogger.ExibirAuditoria();
+                else ConsoleUtils.Message("Opçao invalida!", ConsoleColor.Red, true);
+                ConsoleUtils.Pause();
+                EnviarOpcoesDoMenu();
+                break;
+            case "12": if(TerminalConfig.ModoDesenvolvedorAtivo) AuditLogger.LimparAuditoria();
+                else ConsoleUtils.Message("Opçao invalida!", ConsoleColor.Red, true);
                 ConsoleUtils.Pause();
                 EnviarOpcoesDoMenu();
                 break;
@@ -83,6 +99,7 @@ class Program
         var novoServico = new Services(nomeServico, valorUnitario, custoUnitario, quantidade, meioPagamento);
         var lista = GerenciadorDeServicos.Carregar();
         GerenciadorDeServicos.AdicionarServico(lista, novoServico);
+        AuditLogger.RegistrarAcao($"Servido adicionado: {novoServico.Servico} | ID: {novoServico.Id}");
         
         ConsoleUtils.Message("SERVICO ADICIONADO COM SUCESSO!", ConsoleColor.Green);
         ConsoleUtils.Pause();
@@ -93,7 +110,7 @@ class Program
     {
         Console.Clear();
         ChecarSeExistemServicos();
-        
+
         foreach (var servico in lista)
         {
             ConsoleUtils.Message(
@@ -103,8 +120,23 @@ class Program
         }
 
         var idInput = ConsoleUtils.Ask("--------\nInforme o ID do serviço que deseja remover", ConsoleColor.Yellow);
-        if(int.TryParse(idInput, out var idRemover))
-         RemoverServico(lista, idRemover);
+        if (int.TryParse(idInput, out var idRemover))
+        {
+            ConsoleUtils.Message($"(!) O serviço de id {idRemover} sera removido do sistema, essa açao nao podera ser desfeita.", ConsoleColor.Yellow);
+            var confirmOption = ConsoleUtils.Ask("Tem certeza de que deseja fazer isso? <s> | <n>", ConsoleColor.Yellow);
+            switch (confirmOption.ToLower())
+            {
+                case "n": ConsoleUtils.Pause("Pressione qualquer tecla para retornar ao menu principal");
+                    EnviarOpcoesDoMenu();
+                    break;
+                case "s": RemoverServico(lista, idRemover); break;
+                default:
+                    ConsoleUtils.Pause("Resposta invalida. Pressione qualquer tecla para retornar ao menu...");
+                    EnviarOpcoesDoMenu();
+                    break;
+            }
+        }
+
         else
         {
             ConsoleUtils.Message("(!) O ID inserido nao é valido!", ConsoleColor.Red);
@@ -121,10 +153,12 @@ class Program
                 throw new Erros.ServicoNaoEncontradoExc(id);
 
             services.Remove(servico);
+            AuditLogger.RegistrarAcao($"Serviço removido: {servico.Servico} | ID: {servico.Id}");
             GerenciadorDeServicos.Salvar(services);
+            
             ConsoleUtils.Message("SERVIÇO REMOVIDO COM SUCESSO!", ConsoleColor.DarkGreen);
             ConsoleUtils.Message(
-                $"Dados do serviço removido: | ID {servico.Id} | Serviço {servico.Servico} | Data que foi cadastrado {servico.DataCadastro}",
+                $"Dados do serviço removido => ID: {servico.Id} | Serviço: {servico.Servico} | Data que foi cadastrado: {servico.DataCadastro}",
                 ConsoleColor.Yellow);
         }
         catch (Erros.ServicoNaoEncontradoExc ex)

@@ -9,7 +9,7 @@ public static class Logger
     
     public static void LogarErro(Exception ex)
     {
-        var mensagem = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {ex.GetType().Name} | {ex.Message} | {ex.Message}\n";
+        var mensagem = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {ex.GetType().Name} | {ex.Message}\n";
         File.AppendAllText(CaminhoLog, mensagem);
     }
 
