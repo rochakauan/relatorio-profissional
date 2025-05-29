@@ -88,8 +88,6 @@ public static class TerminalConfig
             ConsoleUtils.Message("\nMODO DESENVOLVEDOR Ativado!", ConsoleColor.Magenta, true);
         }
         else { ConsoleUtils.Message("(!) Senha incorreta!",  ConsoleColor.Red); }
-        ConsoleUtils.Pause();
-        Program.EnviarOpcoesDoMenu();
     }
     
     /// <summary>
@@ -99,7 +97,5 @@ public static class TerminalConfig
     {
         ModoDesenvolvedorAtivo = false;
         ConsoleUtils.Message("\nVoce acaba de sair do modo desenvolvedor", ConsoleColor.Yellow, true);
-        ConsoleUtils.Pause();
-        Program.EnviarOpcoesDoMenu();
     }
 }

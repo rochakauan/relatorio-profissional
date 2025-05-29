@@ -72,6 +72,8 @@ class Program
                 break;
             case "dev":
                 TerminalConfig.AtivarModoDesenvolvedor();
+                ConsoleUtils.Pause();
+                EnviarOpcoesDoMenu();
                 break;
             case "0": ConsoleUtils.KillTerminal(1000, "Encerrando o programa...", clearConsoleBefore: true); break;
             default: EnviarOpcoesDoMenu(); break;

@@ -17,8 +17,6 @@ public static class AuditLogger
         if (!File.Exists(CaminhoAuditoria))
         {
             ConsoleUtils.Message("(!) Nenhum registro de auditoria encontrado ate o momento.",  ConsoleColor.Yellow);
-            ConsoleUtils.Pause();
-            Program.EnviarOpcoesDoMenu();
             return;
         }
 
@@ -32,15 +30,11 @@ public static class AuditLogger
         if (!File.Exists(CaminhoAuditoria))
         {
             ConsoleUtils.Message("(!) Não há registro de auditoria para apagar.",  ConsoleColor.Yellow);
-            ConsoleUtils.Pause();
-            Program.EnviarOpcoesDoMenu();
             return;
         }
         
         var quantia = File.ReadAllLines(CaminhoAuditoria).Length;
         File.Delete(CaminhoAuditoria);
         ConsoleUtils.Message($"{quantia} REGISTRO(S) DE AUDITORIA APAGADO(S) COM SUCESSO!",   ConsoleColor.Green);
-        ConsoleUtils.Pause();
-        Program.EnviarOpcoesDoMenu();
     }
 }
