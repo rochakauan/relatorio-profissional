@@ -40,7 +40,7 @@
             bool? clearConsoleBefore = null,
             int cursorLeft = 0,
             int cursorTop = 0,
-            bool allowEmpty = false) {
+            bool allowEmpty = true) {
             
             if (clearConsoleBefore ?? TerminalConfig.EnableClearBeforeMessages)
                 Console.Clear();
@@ -50,7 +50,7 @@
             if (cursorLeft != 0 || cursorTop != 0)
                 Console.SetCursorPosition(cursorLeft, cursorTop);
 
-            var inputTry = 0;
+            //var inputTry = 0;
             string input;
             do
             {
@@ -59,7 +59,9 @@
 
                 if (!allowEmpty && string.IsNullOrWhiteSpace(input))
                 {
-                    Message(TerminalDefaults.InvalidInputMessage, ConsoleColor.Red);
+                    Pause(TerminalDefaults.InvalidInputMessage, ConsoleColor.Red);
+                    
+                    /*
                     inputTry++;
 
                     if (inputTry == 4)
@@ -68,6 +70,7 @@
                         Program.EnviarOpcoesDoMenu();
                         inputTry = 0;
                     }
+                    */
                 }
 
             } while (!allowEmpty && string.IsNullOrWhiteSpace(input));

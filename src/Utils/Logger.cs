@@ -36,14 +36,10 @@ public static class Logger
         if (!File.Exists(CaminhoLog))
         {
             ConsoleUtils.Message("Nenhum Log foi foi encontrado para apagar.", ConsoleColor.Yellow);
-            ConsoleUtils.Pause();
-            Program.EnviarOpcoesDoMenu();
             return;
         }
         var logsQuantia = File.ReadAllLines(CaminhoLog).Length;
         File.Delete(CaminhoLog);
         ConsoleUtils.Message($"{logsQuantia} LOG(S) APAGADOS COM SUCESSO!",  ConsoleColor.Green);
-        ConsoleUtils.Pause();
-        Program.EnviarOpcoesDoMenu();
     }
 }

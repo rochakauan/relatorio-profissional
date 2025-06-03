@@ -4,7 +4,7 @@
  
  public class Services
  {
-     private static int _ultimoId = 0;
+     private static int _ultimoId;
  
      public int Id { get; set; }
      public string Servico { get; set; }
@@ -17,7 +17,7 @@
      private decimal ValorTotalBruto => ValorUnitario * Quantidade;
      private decimal CustoTotal => CustoUnitario * Quantidade;
      private decimal ValorTotal => ValorTotalBruto - CustoTotal;
-     private decimal ComissaoFuncionario => ValorTotal / 2;
+     public decimal ComissaoFuncionario  => ValorTotal / 2;
      
      public Services()
      {

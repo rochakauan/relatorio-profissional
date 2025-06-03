@@ -19,7 +19,7 @@ namespace RelatorioProfissional.Utils
         /// <summary>
         /// The message shown when the user provides invalid input.
         /// </summary>
-        public static string InvalidInputMessage { get; set; } = "Argumento invalido, tente novamente.";
+        public static string InvalidInputMessage { get; set; } = "Argumento invalido, pressione qualquer tecla para continuar...";
         /// <summary>
         ///  The symbol displayed in prompts before reading user input.
         /// </summary>
