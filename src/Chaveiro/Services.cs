@@ -4,7 +4,7 @@
  
  public class Services
  {
-     private static int _ultimoId;
+     private static int _ultimoId = 0;
  
      public int Id { get; set; }
      public string Servico { get; set; }
